@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小棲 Mily’s select</title>
+    <title>Cozy Corner - Mily’s select</title>
     <style>
         :root {
             --bg-color: #f7f5f0; /* 米白紙質感 */
@@ -114,21 +114,6 @@
             margin-bottom: 20px;
         }
 
-        .tag-row {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-
-        .tag {
-            background: #eee;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: #555;
-        }
-
         /* Form Elements */
         .option-group {
             margin-bottom: 25px;
@@ -147,6 +132,25 @@
 
         .radio-label:hover {
             border-color: #999;
+        }
+        
+        /* 抹茶溫度選項修正 */
+        .m-temp-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 0; /* 修正選項上下間距 */
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            justify-content: center;
+            flex: 1; 
+        }
+
+        .m-temp-label input {
+            margin-right: 10px; /* 增加文字與 Radio Button 的距離 */
+            accent-color: var(--text-color);
+            transform: scale(1.2);
         }
 
         .radio-label input {
@@ -242,32 +246,48 @@
 
 <div class="container">
     <header>
-        <h1>小棲</h1>
+        <h1>Cozy Corner</h1>
         <div class="subtitle">Mily’s select</div>
     </header>
 
     <div class="tabs">
-        <button class="tab-btn tab-coffee" onclick="switchTab('coffee')">COFFEE</button>
-        <button class="tab-btn tab-matcha active" onclick="switchTab('matcha')">MATCHA</button>
+        <button class="tab-btn tab-coffee active" onclick="switchTab('coffee')">COFFEE</button>
+        <button class="tab-btn tab-matcha" onclick="switchTab('matcha')">MATCHA</button>
     </div>
 
-    <div id="coffee-section" class="menu-section">
+    <div id="coffee-section" class="menu-section active">
         <h2 style="border-color: var(--accent-brown);">手沖單品咖啡</h2>
         <div class="desc-text">
-            <strong>Ethiopia Light Roast Journey</strong><br>
-            衣索比亞 淺焙手沖。<br>
-            嚴選來自世界各地的烘焙風格，呈現明亮的花香與水果調性。
+            **淺焙・單一產區**：衣索比亞 耶加雪菲
         </div>
         
-        <span class="section-title">TODAY'S SELECTION</span>
-        <div class="tag-row">
-            <span class="tag">🇳🇿 紐西蘭 C4 Coffee</span>
-            <span class="tag">🇯🇵 東京 Fuglen</span>
-            <span class="tag">🇹🇼 桃園 焱 Yan Coffee</span>
+        <span class="section-title">I. SELECT YOUR ROASTER (選烘豆師/來源)</span>
+        <div class="option-group">
+            <label class="radio-label">
+                <input type="radio" name="c-bean" value="紐西蘭 C4 Coffee" checked>
+                <div class="option-content">
+                    <span class="option-title">紐西蘭 C4 Coffee</span>
+                    <span class="option-desc">乾淨、極致花香調。</span>
+                </div>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="c-bean" value="東京 Fuglen Coffee Roasters">
+                <div class="option-content">
+                    <span class="option-title">東京 Fuglen Coffee Roasters</span>
+                    <span class="option-desc">酸質明亮、柑橘風味。</span>
+                </div>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="c-bean" value="台灣 桃園 焱 Yan Coffee">
+                <div class="option-content">
+                    <span class="option-title">台灣 桃園 焱 Yan Coffee</span>
+                    <span class="option-desc">甜感高、層次細緻。</span>
+                </div>
+            </label>
         </div>
 
+        <span class="section-title">II. TEMPERATURE</span>
         <div class="option-group">
-             <span class="section-title">TEMPERATURE</span>
              <label class="radio-label">
                 <input type="radio" name="c-temp" value="熱 (Hot)" checked>
                 <span class="option-title">熱 (Hot)</span>
@@ -281,7 +301,7 @@
         <button class="submit-btn btn-coffee" onclick="submitOrder('coffee')">選好了 (Order Coffee)</button>
     </div>
 
-    <div id="matcha-section" class="menu-section active">
+    <div id="matcha-section" class="menu-section">
         <h2 style="border-color: var(--accent-green);">手刷抹茶拿鐵</h2>
         <p class="desc-text" style="margin-bottom: 10px;">
             現點現刷・無糖・純粹茶香
@@ -290,7 +310,7 @@
         <span class="section-title">I. SELECT YOUR MATCHA (選茶韻)</span>
         <div class="option-group">
             <label class="radio-label">
-                <input type="radio" name="m-powder" value="中村藤吉 [ 藤之白 ]" data-desc="清爽・回甘">
+                <input type="radio" name="m-powder" value="中村藤吉 [ 藤之白 ]" data-desc="清新 · 回甘">
                 <div class="option-content">
                     <span class="option-title">中村藤吉 [ 藤之白 ]</span>
                     <span class="option-desc">清新 · 回甘</span>
@@ -298,7 +318,7 @@
             </label>
 
             <label class="radio-label">
-                <input type="radio" name="m-powder" value="一保堂 [ 幾世之昔 ]" data-desc="優雅・細緻">
+                <input type="radio" name="m-powder" value="一保堂 [ 幾世之昔 ]" data-desc="優雅 · 細緻">
                 <div class="option-content">
                     <span class="option-title">一保堂 [ 幾世之昔 ]</span>
                     <span class="option-desc">優雅 · 細緻</span>
@@ -306,7 +326,7 @@
             </label>
 
             <label class="radio-label">
-                <input type="radio" name="m-powder" value="丸久小山園 [ 青嵐 ]" data-desc="經典・平衡" checked>
+                <input type="radio" name="m-powder" value="丸久小山園 [ 青嵐 ]" data-desc="經典 · 平衡" checked>
                 <div class="option-content">
                     <span class="option-title">丸久小山園 [ 青嵐 ]</span>
                     <span class="option-desc">經典 · 平衡</span>
@@ -314,7 +334,7 @@
             </label>
 
             <label class="radio-label">
-                <input type="radio" name="m-powder" value="伊藤久右衛門 [ 清壽之森 ]" data-desc="深邃・醇厚">
+                <input type="radio" name="m-powder" value="伊藤久右衛門 [ 清壽之森 ]" data-desc="深邃 · 醇厚">
                 <div class="option-content">
                     <span class="option-title">伊藤久右衛門 [ 清壽之森 ]</span>
                     <span class="option-desc">深邃 · 醇厚</span>
@@ -322,7 +342,7 @@
             </label>
 
             <label class="radio-label">
-                <input type="radio" name="m-powder" value="鹿兒島 [ 有機抹茶 ]" data-desc="自然・草本">
+                <input type="radio" name="m-powder" value="鹿兒島 [ 有機抹茶 ]" data-desc="自然 · 草本">
                 <div class="option-content">
                     <span class="option-title">鹿兒島 [ 有機抹茶 ]</span>
                     <span class="option-desc">自然 · 草本香</span>
@@ -348,14 +368,14 @@
 
         <span class="section-title">III. TEMPERATURE (溫度)</span>
         <div class="option-group" style="display: flex; gap: 10px;">
-            <label class="radio-label" style="flex:1; justify-content: center;">
-                <input type="radio" name="m-temp" value="熱" style="margin:0;"> 热
+            <label class="m-temp-label">
+                <input type="radio" name="m-temp" value="熱"> 熱
             </label>
-            <label class="radio-label" style="flex:1; justify-content: center;">
-                <input type="radio" name="m-temp" value="冰" style="margin:0;" checked> 冰
+            <label class="m-temp-label">
+                <input type="radio" name="m-temp" value="冰" checked> 冰
             </label>
-            <label class="radio-label" style="flex:1; justify-content: center;">
-                <input type="radio" name="m-temp" value="少冰" style="margin:0;"> 少冰
+            <label class="m-temp-label">
+                <input type="radio" name="m-temp" value="少冰"> 少冰
             </label>
         </div>
 
@@ -365,7 +385,7 @@
 
 <div class="modal-overlay" id="modal" onclick="closeModal()">
     <div class="receipt" onclick="event.stopPropagation()">
-        <h3>Mily's Select</h3>
+        <h3>Cozy Corner</h3>
         <div style="font-size: 0.9rem; color:#888;">Order Ticket</div>
         <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
         
@@ -374,7 +394,7 @@
 
         <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
         <div class="receipt-footer">
-            Enjoy your time at 小棲.<br>
+            Enjoy your time at Cozy Corner.<br>
             請出示此畫面給 Mily
         </div>
         <button class="close-btn" onclick="closeModal()">關閉</button>
@@ -382,6 +402,11 @@
 </div>
 
 <script>
+    // 設置初始顯示為 Coffee
+    document.addEventListener('DOMContentLoaded', () => {
+        switchTab('coffee');
+    });
+
     function switchTab(type) {
         // 切換按鈕樣式
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -396,11 +421,13 @@
         let content = "";
         
         if (type === 'coffee') {
+            const bean = document.querySelector('input[name="c-bean"]:checked').value;
             const temp = document.querySelector('input[name="c-temp"]:checked').value;
             content = `
-                <strong>☕ 手沖單品</strong><br>
-                <span style="font-size:0.9em; color:#666;">衣索比亞 淺焙</span><br>
+                <strong>☕ 手沖單品咖啡</strong><br>
+                <span style="font-size:0.9em; color:#666;">淺焙・衣索比亞 耶加雪菲</span><br>
                 <br>
+                選豆來源：${bean}<br>
                 溫度：${temp}
             `;
         } else {
@@ -428,3 +455,4 @@
 
 </body>
 </html>
+

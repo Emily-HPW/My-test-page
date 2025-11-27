@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小棲 Mily’s select</title>
+    <style>
+        :root {
+            --bg-color: #f7f5f0; /* 米白紙質感 */
+            --text-color: #4a4a4a;
+            --accent-green: #5c7c58; /* 抹茶綠 */
+            --accent-brown: #8b5e3c; /* 咖啡褐 */
+            --light-gray: #e0e0e0;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            letter-spacing: 2px;
+            color: var(--text-color);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            margin-top: 5px;
+            font-family: serif;
+        }
+
+        /* Tabs for Coffee vs Matcha */
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--light-gray);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+            color: #aaa;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .tab-coffee.active { background-color: var(--accent-brown); }
+        .tab-matcha.active { background-color: var(--accent-green); }
+
+        /* Sections */
+        .menu-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .menu-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            border-left: 4px solid var(--text-color);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .desc-text {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tag-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: #eee;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        /* Form Elements */
+        .option-group {
+            margin-bottom: 25px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .radio-label:hover {
+            border-color: #999;
+        }
+
+        .radio-label input {
+            margin-right: 15px;
+            accent-color: var(--text-color);
+            transform: scale(1.2);
+        }
+
+        .option-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-title {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .option-desc {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Action Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        
+        .btn-coffee { background-color: var(--accent-brown); }
+        .btn-coffee:hover { background-color: #6d4a2f; }
+        
+        .btn-matcha { background-color: var(--accent-green); }
+        .btn-matcha:hover { background-color: #466042; }
+
+        /* Modal / Receipt */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .receipt {
+            background: white;
+            padding: 30px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            border-radius: 4px; /* Receipt feel */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .receipt::before {
+            content: "";
+            position: absolute;
+            top: -5px; left: 0; width: 100%; height: 10px;
+            background: radial-gradient(circle, transparent 0.25em, white 0.25em);
+            background-size: 0.5em 0.5em;
+            background-repeat: repeat-x;
+        }
+
+        .receipt h3 { margin-top: 0; color: var(--text-color); }
+        .receipt-item { margin: 20px 0; font-size: 1.1rem; line-height: 1.6; }
+        .receipt-footer { font-size: 0.8rem; color: #999; margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 10px; }
+        .close-btn { margin-top: 20px; background: transparent; border: 1px solid #aaa; padding: 5px 20px; cursor: pointer; border-radius: 20px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>小棲</h1>
+        <div class="subtitle">Mily’s select</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn tab-coffee" onclick="switchTab('coffee')">COFFEE</button>
+        <button class="tab-btn tab-matcha active" onclick="switchTab('matcha')">MATCHA</button>
+    </div>
+
+    <div id="coffee-section" class="menu-section">
+        <h2 style="border-color: var(--accent-brown);">手沖單品咖啡</h2>
+        <div class="desc-text">
+            <strong>Ethiopia Light Roast Journey</strong><br>
+            衣索比亞 淺焙手沖。<br>
+            嚴選來自世界各地的烘焙風格，呈現明亮的花香與水果調性。
+        </div>
+        
+        <span class="section-title">TODAY'S SELECTION</span>
+        <div class="tag-row">
+            <span class="tag">🇳🇿 紐西蘭 C4 Coffee</span>
+            <span class="tag">🇯🇵 東京 Fuglen</span>
+            <span class="tag">🇹🇼 桃園 焱 Yan Coffee</span>
+        </div>
+
+        <div class="option-group">
+             <span class="section-title">TEMPERATURE</span>
+             <label class="radio-label">
+                <input type="radio" name="c-temp" value="熱 (Hot)" checked>
+                <span class="option-title">熱 (Hot)</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="c-temp" value="冰 (Iced)">
+                <span class="option-title">冰 (Iced)</span>
+            </label>
+        </div>
+
+        <button class="submit-btn btn-coffee" onclick="submitOrder('coffee')">選好了 (Order Coffee)</button>
+    </div>
+
+    <div id="matcha-section" class="menu-section active">
+        <h2 style="border-color: var(--accent-green);">手刷抹茶拿鐵</h2>
+        <p class="desc-text" style="margin-bottom: 10px;">
+            現點現刷・無糖・純粹茶香
+        </p>
+
+        <span class="section-title">I. SELECT YOUR MATCHA (選茶韻)</span>
+        <div class="option-group">
+            <label class="radio-label">
+                <input type="radio" name="m-powder" value="中村藤吉 [ 藤之白 ]" data-desc="清爽・回甘">
+                <div class="option-content">
+                    <span class="option-title">中村藤吉 [ 藤之白 ]</span>
+                    <span class="option-desc">清新 · 回甘</span>
+                </div>
+            </label>
+
+            <label class="radio-label">
+                <input type="radio" name="m-powder" value="一保堂 [ 幾世之昔 ]" data-desc="優雅・細緻">
+                <div class="option-content">
+                    <span class="option-title">一保堂 [ 幾世之昔 ]</span>
+                    <span class="option-desc">優雅 · 細緻</span>
+                </div>
+            </label>
+
+            <label class="radio-label">
+                <input type="radio" name="m-powder" value="丸久小山園 [ 青嵐 ]" data-desc="經典・平衡" checked>
+                <div class="option-content">
+                    <span class="option-title">丸久小山園 [ 青嵐 ]</span>
+                    <span class="option-desc">經典 · 平衡</span>
+                </div>
+            </label>
+
+            <label class="radio-label">
+                <input type="radio" name="m-powder" value="伊藤久右衛門 [ 清壽之森 ]" data-desc="深邃・醇厚">
+                <div class="option-content">
+                    <span class="option-title">伊藤久右衛門 [ 清壽之森 ]</span>
+                    <span class="option-desc">深邃 · 醇厚</span>
+                </div>
+            </label>
+
+            <label class="radio-label">
+                <input type="radio" name="m-powder" value="鹿兒島 [ 有機抹茶 ]" data-desc="自然・草本">
+                <div class="option-content">
+                    <span class="option-title">鹿兒島 [ 有機抹茶 ]</span>
+                    <span class="option-desc">自然 · 草本香</span>
+                </div>
+            </label>
+        </div>
+
+        <span class="section-title">II. SELECT YOUR BASE (選奶)</span>
+        <div class="option-group">
+            <label class="radio-label">
+                <input type="radio" name="m-milk" value="許慶良鮮乳" checked>
+                <span class="option-title">許慶良鮮乳</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="m-milk" value="固力果杏仁奶">
+                <span class="option-title">固力果杏仁奶</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="m-milk" value="燕麥奶">
+                <span class="option-title">燕麥奶</span>
+            </label>
+        </div>
+
+        <span class="section-title">III. TEMPERATURE (溫度)</span>
+        <div class="option-group" style="display: flex; gap: 10px;">
+            <label class="radio-label" style="flex:1; justify-content: center;">
+                <input type="radio" name="m-temp" value="熱" style="margin:0;"> 热
+            </label>
+            <label class="radio-label" style="flex:1; justify-content: center;">
+                <input type="radio" name="m-temp" value="冰" style="margin:0;" checked> 冰
+            </label>
+            <label class="radio-label" style="flex:1; justify-content: center;">
+                <input type="radio" name="m-temp" value="少冰" style="margin:0;"> 少冰
+            </label>
+        </div>
+
+        <button class="submit-btn btn-matcha" onclick="submitOrder('matcha')">選好了 (Show Mily)</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+    <div class="receipt" onclick="event.stopPropagation()">
+        <h3>Mily's Select</h3>
+        <div style="font-size: 0.9rem; color:#888;">Order Ticket</div>
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+        
+        <div id="receipt-content" class="receipt-item">
+            </div>
+
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+        <div class="receipt-footer">
+            Enjoy your time at 小棲.<br>
+            請出示此畫面給 Mily
+        </div>
+        <button class="close-btn" onclick="closeModal()">關閉</button>
+    </div>
+</div>
+
+<script>
+    function switchTab(type) {
+        // 切換按鈕樣式
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('.tab-' + type).classList.add('active');
+
+        // 切換內容顯示
+        document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(type + '-section').classList.add('active');
+    }
+
+    function submitOrder(type) {
+        let content = "";
+        
+        if (type === 'coffee') {
+            const temp = document.querySelector('input[name="c-temp"]:checked').value;
+            content = `
+                <strong>☕ 手沖單品</strong><br>
+                <span style="font-size:0.9em; color:#666;">衣索比亞 淺焙</span><br>
+                <br>
+                溫度：${temp}
+            `;
+        } else {
+            const powder = document.querySelector('input[name="m-powder"]:checked');
+            const milk = document.querySelector('input[name="m-milk"]:checked').value;
+            const temp = document.querySelector('input[name="m-temp"]:checked').value;
+            
+            content = `
+                <strong>🍵 抹茶拿鐵</strong><br>
+                <br>
+                選茶：${powder.value}<br>
+                奶底：${milk}<br>
+                溫度：${temp}
+            `;
+        }
+
+        document.getElementById('receipt-content').innerHTML = content;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
